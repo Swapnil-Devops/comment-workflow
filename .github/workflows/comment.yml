@@ -66,7 +66,7 @@ jobs:
 
       - name: Update Blurb Discussion
         id: update_Blurb
-        uses: Swapnil-Devops/updateblurb@main
+        uses: kiran-godse/updateblurb@main
         with:
           api_key: ${{ secrets.API_KEY }}
           blurb_body: ${{ steps.chatgpt.outputs.body }}
