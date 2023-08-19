@@ -68,6 +68,6 @@ jobs:
         id: update_Blurb
         uses: kiran-godse/updateblurb@main
         with:
-          api_key: ${{ secrets.API_KEY }}
+          PAT:  ${{ secrets.GITHUB_TOKEN }}
           blurb_body: ${{ steps.chatgpt.outputs.body }}
           discussionId: ${{ steps.discussion-info.outputs.disc_number}}   
