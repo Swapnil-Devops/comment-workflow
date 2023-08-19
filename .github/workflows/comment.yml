@@ -18,7 +18,7 @@ jobs:
         run: |
           echo "comment_body=$(echo '${{ toJson(github.event) }}' | jq '.comment.body')" >> $GITHUB_OUTPUT
           echo "disc_number=$(echo '${{ toJson(github.event) }}' | jq '.discussion.number')" >> $GITHUB_OUTPUT
-          echo "disc_ID=$(echo '${{ toJson(github.event) }}' | jq '.discussion.id')" >> $GITHUB_OUTPUT
+          echo "disc_ID=$(echo '${{ toJson(github.event) }}' | jq '.discussion.node_id')" >> $GITHUB_OUTPUT
           echo "disc_body=$(echo '${{ toJson(github.event) }}' | jq '.discussion.body')" >> $GITHUB_OUTPUT
 
       # - name: Get Blurb discussion number
