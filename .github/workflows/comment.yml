@@ -70,4 +70,4 @@ jobs:
         with:
           api_key: ${{ secrets.API_KEY }}
           blurb_body: ${{ steps.chatgpt.outputs.body }}
-          discussionId: ${{ steps.discussion-info.outputs.disc_body}}   
+          discussionId: ${{ steps.discussion-info.outputs.disc_number}}   
