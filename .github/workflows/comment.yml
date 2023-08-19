@@ -70,4 +70,4 @@ jobs:
         with:
           PAT:  ${{ secrets.GITHUB_TOKEN }}
           blurb_body: ${{ steps.chatgpt.outputs.body }}
-          discussionId: ${{ steps.discussion-info.outputs.disc_number}}   
+          discussionId: ${{ steps.discussion-info.outputs.disc_ID}}   
