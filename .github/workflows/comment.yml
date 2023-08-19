@@ -1,0 +1,73 @@
+name: Update Discussion on Comment
+
+on:
+  discussion_comment:
+    types:
+      - created
+jobs:
+  update-discussion:
+    if: >-
+      github.event.discussion.category.name == 'General'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Get discussion information
+        id: discussion-info
+        run: |
+          echo "comment_body=$(echo '${{ toJson(github.event) }}' | jq '.comment.body')" >> $GITHUB_OUTPUT
+          echo "disc_number=$(echo '${{ toJson(github.event) }}' | jq '.discussion.number')" >> $GITHUB_OUTPUT
+          echo "disc_ID=$(echo '${{ toJson(github.event) }}' | jq '.discussion.id')" >> $GITHUB_OUTPUT
+          echo "disc_body=$(echo '${{ toJson(github.event) }}' | jq '.discussion.body')" >> $GITHUB_OUTPUT
+
+      # - name: Get Blurb discussion number
+      #   id: blurb_disc_number
+      #   run: |
+      #     echo "blurb_disc_number= $((${{ steps.discussion-info.outputs.disc_number }}+1))" >> $GITHUB_OUTPUT
+
+      # - name: GitHub GraphQL API Query
+      #   uses: octokit/graphql-action@v2.2.1
+      #   id: get_discussion_info
+      #   with:
+      #     query: |
+      #       query {
+      #        repository(owner: "${{ github.repository_owner }}", name: "${{ github.event.repository.name }}") {
+      #          discussion(number: ${{ steps.discussion-info.outputs.disc_number}}) {
+      #            title
+      #            body
+      #            }
+      #          }
+      #        }
+      #     # owner: ${{ github.repository_owner }}
+      #     # repo: ${{ github.event.repository.name }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Get Blurb discussion information body
+      #   id: Blurb_body
+      #   run: echo "Blurb_body=$(echo '${{ steps.get_discussion_info.outputs.data }}' | jq -r '.repository.discussion.body')" >> $GITHUB_OUTPUT
+
+      - name: Create a new prompt
+        id: prompt_creation
+        uses: Swapnil-Devops/gptprompt@main
+        with:
+          blurb_body: ${{ steps.discussion-info.outputs.disc_body}}
+          comment_body: ${{ steps.discussion-info.outputs.comment_body}}
+
+      - name: verify prompt
+        run: echo "${{ steps.prompt_creation.outputs.body}}"
+
+      - name: chatgpt
+        id: chatgpt
+        uses: Swapnil-Devops/chatdocument@main
+        with:
+          api_key: ${{ secrets.API_KEY }}
+          prompt: ${{ steps.prompt_creation.outputs.body}}
+
+      - name: Update Blurb Discussion
+        id: update_Blurb
+        uses: Swapnil-Devops/updateblurb@main
+        with:
+          api_key: ${{ secrets.API_KEY }}
+          blurb_body: ${{ steps.chatgpt.outputs.body }}
+          discussionId: ${{ steps.discussion-info.outputs.disc_body}}   
