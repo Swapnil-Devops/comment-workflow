@@ -4,6 +4,7 @@ on:
   discussion_comment:
     types:
       - created
+      
 jobs:
   update-discussion:
     if: >-
