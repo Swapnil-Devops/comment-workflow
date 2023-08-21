@@ -22,6 +22,9 @@ jobs:
           echo "disc_ID=$(echo '${{ toJson(github.event) }}' | jq '.discussion.node_id')" >> $GITHUB_OUTPUT
           echo "disc_body=$(echo '${{ toJson(github.event) }}' | jq '.discussion.body')" >> $GITHUB_OUTPUT
 
+      - name: verify node_id
+        run: echo "${{ steps.discussion-info.outputs.disc_ID}}"     
+
       # - name: Get Blurb discussion number
       #   id: blurb_disc_number
       #   run: |
